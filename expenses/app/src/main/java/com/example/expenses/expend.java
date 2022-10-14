@@ -20,13 +20,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+//import com.firebase.ui.database.FirebaseRecyclerAdapter;
+//import com.firebase.ui.database.FirebaseRecyclerOptions;
+//import com.firebase.ui.database.SnapshotParser;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.database.DataSnapshot;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -36,7 +36,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class expend extends Fragment {
 
     final static String TAG = "Expend Fragment";
-    DatabaseReference myChildRef; //ATTN:
+    // DatabaseReference myChildRef; //ATTN:
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
