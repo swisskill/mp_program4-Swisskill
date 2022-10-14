@@ -69,11 +69,12 @@ public class expend extends Fragment {
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                Name = et_name.getText().toString(); //ATTN: GO TO PROG 3 AND FIND ERROR HANDLING
-                Cate = et_cate.getText().toString();
-                Date = et_date.getText().toString();
-                Amot = parseFloat(et_amot.getText().toString());
-                Note = et_note.getText().toString();
+                String[] fields = checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
+                Name = fields[0];
+                Cate = fields[1];
+                Date = fields[2];
+                Amot = parseFloat(fields[3]);
+                Note = fields[4];
                 infoControl();
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -83,6 +84,15 @@ public class expend extends Fragment {
             }
         });
         builder.show();
+    }
+    String[] checkEmpty(EditText n,EditText c,EditText d,EditText a,EditText o) {
+        String rn, rc, rd, ra, ro;
+        if (n.getText().toString().isEmpty()){rn = "";}else{rn=n.getText().toString();}
+        if (c.getText().toString().isEmpty()){rc = "";}else{rc=c.getText().toString();}
+        if (d.getText().toString().isEmpty()){rd = "";}else{rd=d.getText().toString();}
+        if (a.getText().toString().isEmpty()){ra = "0";}else{ra=a.getText().toString();}
+        if (o.getText().toString().isEmpty()){ro = "";}else{ro=o.getText().toString();}
+        return new String[]{rn, rc, rd, ra, ro};
     }
     void logCanceled(){
         Log.d(TAG, "dialog canceled");
