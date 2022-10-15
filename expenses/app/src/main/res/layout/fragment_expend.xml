@@ -8,7 +8,6 @@
     android:background="@android:color/holo_blue_dark"
     tools:context=".expend"
     >
-    <androidx.s
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

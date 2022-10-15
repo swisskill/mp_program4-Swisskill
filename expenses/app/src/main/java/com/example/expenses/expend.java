@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,37 +48,57 @@ public class expend extends Fragment {
     String Date = "";
     String Amot = "";
     String Note = "";
+    RecyclerView recyclerView;
+    RecyclerView_Adapter adapter;
     List<exData> totalData = new ArrayList<>(); //ATTN: will equal whatever is in the db upon startup
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
         //------------------------------------------------------------
-        RecyclerView recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
-        RecyclerView_Adapter adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
+        recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
+        adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
         recyclerView.setAdapter(adapter);
         if (!totalData.isEmpty()) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
         //------------------------------------------------------------
 
+        ItemTouchHelper.SimpleCallback toucher = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                if(direction==ItemTouchHelper.RIGHT){
+                    int item = viewHolder.getAdapterPosition();
+                    totalData.remove(item);
+                    adapter.notifyDataSetChanged();
+                    //ATTN: UPDATE DB
+                }
+            }
+        };
+        ItemTouchHelper toucherHelper = new ItemTouchHelper(toucher);
+        toucherHelper.attachToRecyclerView(recyclerView);
+
+
+
         FloatingActionButton fab = myView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog(recyclerView);
-                //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                showDialog();
             }
         });
-        //ATTN: JIM, this is where the root of the problems are. I suppose I need some kind of observation
-        // on the submit/update button to do this work and do stuff to the recycler view.
-
         return myView;
     }
 
 
-    void showDialog(RecyclerView recyclerView) {
+    void showDialog() {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
         final EditText et_name = textenter.findViewById(R.id.et_name);
