@@ -52,7 +52,7 @@ public class expend extends Fragment {
     String Date ;
     String Amot ;
     String Note ;
-    List<exData> totalData = new ArrayList<>(); //will equal whatever is in the db upon startup
+    List<exData> totalData = new ArrayList<>(); //ATTN: will equal whatever is in the db upon startup
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -62,40 +62,19 @@ public class expend extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
                 showDialog();
-                totalData.add(new exData(Name, Cate, Date, Amot, Note));
-                RecyclerView recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
-                RecyclerView_Adapter adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
             }
-        });//I don't know how to update; will return and figure out
-
+        });
+        //ATTN: JIM, this is where the root of the problems are. I suppose I need some kind of observation
+        // on the submit/update button to do this work and do stuff to the recycler view.
+            totalData.add(new exData(Name, Cate, Date, Amot, Note));
+            RecyclerView recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
+            RecyclerView_Adapter adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return myView;
-
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-//                             @Nullable Bundle savedInstanceState) {
-//        Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
-//        View myView = inflater.inflate(R.layout.fragment_expend, container, false);
-//        FloatingActionButton fab = myView.findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//               // Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
-//                showDialog();
-//            }
-//        });
-//        return myView;
     }
-     List<exData> fill_with_data() {
-        List<exData> data = new ArrayList<>();
 
-        data.add(new exData(Name, Cate, Date, Amot, Note));
-        //data.add(new exData("will", "is", "confused", "right", "now"));
-        return data;
-    }
 
     void showDialog() {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
@@ -118,7 +97,7 @@ public class expend extends Fragment {
                 Amot = "Amount:   " + fields[3];
                 Note = "Note:     " + fields[4];
                 Toast.makeText(getContext(), Name + Cate + Date+fields[3]+Note, Toast.LENGTH_LONG).show();
-                infoControl();
+                logControl();
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -141,7 +120,7 @@ public class expend extends Fragment {
     void logCanceled(){
         Log.d(TAG, "dialog canceled");
     }
-    void infoControl() {
+    void logControl() {
         Log.d(TAG, "Name is " + Name);
         Log.d(TAG, "Name is " + Cate);
         Log.d(TAG, "Name is " + Date);
@@ -149,3 +128,9 @@ public class expend extends Fragment {
         Log.d(TAG, "Name is " + Note);
     }
 }
+
+/*
+------------------------BIN------------------------------------
+Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
+
+ */
