@@ -36,10 +36,10 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
 
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
         holder.name.setText(list.get(position).name);
-        holder.cate.setText(list.get(position).name);
-        holder.date.setText(list.get(position).name);
-        holder.amot.setText(list.get(position).name);
-        holder.note.setText(list.get(position).name);
+        holder.cate.setText(list.get(position).cate);
+        holder.date.setText(list.get(position).date);
+        holder.amot.setText(list.get(position).amot);
+        holder.note.setText(list.get(position).note);
 
     }
 

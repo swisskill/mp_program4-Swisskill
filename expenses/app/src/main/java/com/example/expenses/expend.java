@@ -82,10 +82,9 @@ public class expend extends Fragment {
 //        return myView;
     }
     public List<exData> fill_with_data() {
-
         List<exData> data = new ArrayList<>();
-        data.add(new exData("Will", "alpha", "today", "50", "dunno"));
-
+        //data.add(new exData(Name, Cate, Date, Amot, Note));
+        data.add(new exData("will", "is", "confused", "right", "now"));
         return data;
     }
 
@@ -140,6 +139,5 @@ public class expend extends Fragment {
         Log.d(TAG, "Name is " + Date);
         Log.d(TAG, "Name is " + Amot);
         Log.d(TAG, "Name is " + Note);
-        // now update the recycler view I guess. How? who knows
     }
 }
