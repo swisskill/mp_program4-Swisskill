@@ -50,9 +50,10 @@ public class expend extends Fragment {
     String Note = "";
     RecyclerView recyclerView;
     RecyclerView_Adapter adapter;
+    RecyclerView.ViewHolder viewHolder;
     List<exData> totalData = new ArrayList<>(); //ATTN: will equal whatever is in the db upon startup
 
-
+    //----------------------------------------------------------------------------------------------
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -82,8 +83,11 @@ public class expend extends Fragment {
                 }
             }
         };
+
+
         ItemTouchHelper toucherHelper = new ItemTouchHelper(toucher);
         toucherHelper.attachToRecyclerView(recyclerView);
+
 
 
 
@@ -96,8 +100,39 @@ public class expend extends Fragment {
         });
         return myView;
     }
+    //----------------------------------------------------------------------------------------------
 
-
+    void updateDialog() {
+        //ATTN: When called, Name, Cate etc need to already be called from
+        //
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
+        final EditText et_name = textenter.findViewById(R.id.et_name);et_name.setText(Name);
+        final EditText et_cate = textenter.findViewById(R.id.et_cate);et_name.setText(Cate);
+        final EditText et_date = textenter.findViewById(R.id.et_date);et_name.setText(Date);
+        final EditText et_amot = textenter.findViewById(R.id.et_amot);et_name.setText(Amot);
+        final EditText et_note = textenter.findViewById(R.id.et_note);et_name.setText(Note);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
+                            requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
+        builder.setView(textenter).setTitle("Update");
+        builder.setPositiveButton("Update", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
+                logControl(); //ATTN: probably make logControl update the db. good place for it
+                int item = viewHolder.getAdapterPosition(); //ATTN: UNTESTED
+                totalData.set(item, new exData (Name, Cate, Date, Amot, Note)); //ATTN: UNTESTED
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                logCanceled();
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+    //----------------------------------------------------------------------------------------------
     void showDialog() {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
@@ -111,10 +146,7 @@ public class expend extends Fragment {
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                String[] fields = checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                Name = "Name:     " + fields[0];Cate = "Category: " + fields[1];
-                Date = "Date:     " + fields[2];Amot = "Amount:   " + fields[3];
-                Note = "Note:     " + fields[4];
+                checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
                 logControl(); //ATTN: probably make logControl update the db. good place for it
                 totalData.add(new exData(Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -127,29 +159,35 @@ public class expend extends Fragment {
         });
         builder.show();
     }
+    //----------------------------------------------------------------------------------------------
+    void checkEmpty(EditText n,EditText c,EditText d,EditText a,EditText o) {
+       //I know this method is hard to look at. It's simple: it takes those edit texts, checks for empty
+        //and updates those global variables as a string. Nice and easy.
+        String rn, rc, rd, ra, ro; String nd = String.valueOf(LocalDate.now());
 
-    String[] checkEmpty(EditText n,EditText c,EditText d,EditText a,EditText o) {
-        String rn, rc, rd, ra, ro;
-        String nd = String.valueOf(LocalDate.now());
-        if (n.getText().toString().isEmpty()){rn = "";}else{rn=n.getText().toString();}
-        if (c.getText().toString().isEmpty()){rc = "misc.";}else{rc=c.getText().toString();}
-        if (d.getText().toString().isEmpty()){rd = nd;}else{rd=d.getText().toString();}
-        if (a.getText().toString().isEmpty()){ra = "0";}else{ra=a.getText().toString();}
-        if (o.getText().toString().isEmpty()){ro = "";}else{ro=o.getText().toString();}
-        return new String[]{rn, rc, rd, ra, ro};
+        if (n.getText().toString().isEmpty()){Name = "";}else{Name=n.getText().toString();}
+        if (c.getText().toString().isEmpty()){Cate = "misc.";}else{Cate=c.getText().toString();}
+        if (d.getText().toString().isEmpty()){Date = nd;}else{Date=d.getText().toString();}
+        if (a.getText().toString().isEmpty()){Amot = "0";}else{Amot=a.getText().toString();}
+        if (o.getText().toString().isEmpty()){Note = "";}else{Note=o.getText().toString();}
     }
     void logCanceled(){
         Log.d(TAG, "dialog canceled");
     }
+    //----------------------------------------------------------------------------------------------
     void logControl() {
         Log.d(TAG, "NAME is " + Name);Log.d(TAG, "CATEGORY is " + Cate);
         Log.d(TAG, "DATE is " + Date);Log.d(TAG, "AMOUNT is " + Amot);
         Log.d(TAG, "NOTE is " + Note);
+        //update db
     }
 }
+//--------------------------------------------------------------------------------------------------
 
 /*
 ------------------------BIN------------------------------------
 Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
-
+Name = "Name:     " + fields[0];Cate = "Category: " + fields[1];
+                Date = "Date:     " + fields[2];Amot = "Amount:   " + fields[3];
+                Note = "Note:     " + fields[4];
  */

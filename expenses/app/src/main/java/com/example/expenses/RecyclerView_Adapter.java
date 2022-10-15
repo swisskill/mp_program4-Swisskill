@@ -33,7 +33,6 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull View_Holder holder, int position) {
-
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
         holder.name.setText(list.get(position).name);
         holder.cate.setText(list.get(position).cate);
