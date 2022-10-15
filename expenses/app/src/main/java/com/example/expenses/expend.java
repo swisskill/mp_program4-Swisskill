@@ -50,21 +50,29 @@ public class expend extends Fragment {
     String Name ;
     String Cate ;
     String Date ;
-    float Amot ;
+    String Amot ;
     String Note ;
-
+    List<exData> totalData = new ArrayList<>(); //will equal whatever is in the db upon startup
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
+        FloatingActionButton fab = myView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
+                showDialog();
+                totalData.add(new exData(Name, Cate, Date, Amot, Note));
+                RecyclerView recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
+                RecyclerView_Adapter adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        List<exData> data = fill_with_data();
+            }
+        });//I don't know how to update; will return and figure out
 
-        RecyclerView recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
-        RecyclerView_Adapter adapter = new RecyclerView_Adapter(data, getActivity().getApplication());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return myView;
 
 //    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -81,10 +89,11 @@ public class expend extends Fragment {
 //        });
 //        return myView;
     }
-    public List<exData> fill_with_data() {
+     List<exData> fill_with_data() {
         List<exData> data = new ArrayList<>();
-        //data.add(new exData(Name, Cate, Date, Amot, Note));
-        data.add(new exData("will", "is", "confused", "right", "now"));
+
+        data.add(new exData(Name, Cate, Date, Amot, Note));
+        //data.add(new exData("will", "is", "confused", "right", "now"));
         return data;
     }
 
@@ -103,13 +112,12 @@ public class expend extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 String[] fields = checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                Name = fields[0];
-                Cate = fields[1];
-                Date = fields[2];
-                Amot = parseFloat(fields[3]);
-                Note = fields[4];
+                Name = "Name:     " + fields[0];
+                Cate = "Category: " + fields[1];
+                Date = "Date:     " + fields[2];
+                Amot = "Amount:   " + fields[3];
+                Note = "Note:     " + fields[4];
                 Toast.makeText(getContext(), Name + Cate + Date+fields[3]+Note, Toast.LENGTH_LONG).show();
-                Toast.makeText(getContext(), "silly", Toast.LENGTH_SHORT).show();
                 infoControl();
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
