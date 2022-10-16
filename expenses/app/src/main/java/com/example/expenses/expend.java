@@ -2,6 +2,7 @@ package com.example.expenses;
 
 //@author Will Brant with assistance from Jim Ward
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -40,6 +41,14 @@ import java.util.Objects;
  */
 
 public class expend extends Fragment {
+    Context cont;
+    List<exData> list;
+    public expend(){
+    }
+    public expend(Context c, List<exData> totalData){
+        this.cont = c;
+        this.list = totalData;
+    }
 
     final static String TAG = "Expend Fragment";
     private RecyclerView mRecyclerView;
@@ -51,7 +60,7 @@ public class expend extends Fragment {
     RecyclerView recyclerView;
     RecyclerView_Adapter adapter;
     RecyclerView.ViewHolder viewHolder;
-    List<exData> totalData = new ArrayList<>(); //ATTN: will equal whatever is in the db upon startup
+    List<exData> totalData = new ArrayList<>(); //TODO: will equal whatever is in the db upon startup
 
     //----------------------------------------------------------------------------------------------
     @Override
@@ -79,7 +88,7 @@ public class expend extends Fragment {
                     int item = viewHolder.getAdapterPosition();
                     totalData.remove(item);
                     adapter.notifyDataSetChanged();
-                    //ATTN: UPDATE DB
+                    //TODO: UPDATE DB
                 }
             }
         };
@@ -87,9 +96,6 @@ public class expend extends Fragment {
 
         ItemTouchHelper toucherHelper = new ItemTouchHelper(toucher);
         toucherHelper.attachToRecyclerView(recyclerView);
-
-
-
 
         FloatingActionButton fab = myView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -101,10 +107,11 @@ public class expend extends Fragment {
         return myView;
     }
     //----------------------------------------------------------------------------------------------
-
+//    void stupid(Context som){
+//        Toast.makeText(som, "-wb", Toast.LENGTH_LONG).show();
+//    }
     void updateDialog() {
-        //ATTN: When called, Name, Cate etc need to already be called from
-        //
+        //TODO: When called, Name, Cate etc need to already be called from
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
         final EditText et_name = textenter.findViewById(R.id.et_name);et_name.setText(Name);
@@ -119,9 +126,9 @@ public class expend extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                logControl(); //ATTN: probably make logControl update the db. good place for it
-                int item = viewHolder.getAdapterPosition(); //ATTN: UNTESTED
-                totalData.set(item, new exData (Name, Cate, Date, Amot, Note)); //ATTN: UNTESTED
+                logControl(); //TODO: probably make logControl update the db. good place for it
+                int item = viewHolder.getAdapterPosition(); //TODO: UNTESTED
+                totalData.set(item, new exData (Name, Cate, Date, Amot, Note)); //TODO: UNTESTED
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -147,7 +154,7 @@ public class expend extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                logControl(); //ATTN: probably make logControl update the db. good place for it
+                logControl(); //TODO: probably make logControl update the db. good place for it
                 totalData.add(new exData(Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
@@ -164,7 +171,6 @@ public class expend extends Fragment {
        //I know this method is hard to look at. It's simple: it takes those edit texts, checks for empty
         //and updates those global variables as a string. Nice and easy.
         String rn, rc, rd, ra, ro; String nd = String.valueOf(LocalDate.now());
-
         if (n.getText().toString().isEmpty()){Name = "";}else{Name=n.getText().toString();}
         if (c.getText().toString().isEmpty()){Cate = "misc.";}else{Cate=c.getText().toString();}
         if (d.getText().toString().isEmpty()){Date = nd;}else{Date=d.getText().toString();}

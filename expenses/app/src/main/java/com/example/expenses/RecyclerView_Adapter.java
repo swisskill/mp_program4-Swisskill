@@ -6,6 +6,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
+
+    expend exp;
 
     List<exData> list = Collections.emptyList();
     Context context;
@@ -40,6 +44,16 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
         holder.amot.setText(list.get(position).amot);
         holder.note.setText(list.get(position).note);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                expend exp = new expend(context, list);
+                exp.updateDialog();
+                //TODO: THE ISSUE IS THAT WHILE THE LISTENER WORKS, IT CAN'T CALL UPDATE DIALOG
+                //this is most likely due to the constructor. It needs to include everything that is
+                //required in updateDialog, which gets pretty nasty
+            }
+        });
     }
 
     @Override
