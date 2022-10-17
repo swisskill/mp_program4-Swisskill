@@ -11,6 +11,7 @@ Will Brant
 - Moto G Power 2021: resolution of 720x1600 pixels, 20:9 ratio
 - Android version 11
 ## Anything that doesn't work:
-- Recycler Updating
-- DB
+- Delete Function (can't figure out how to hand the ID in)
+- Query (restarting doesn't show the db, even though I think the db is being populated)
+
 
