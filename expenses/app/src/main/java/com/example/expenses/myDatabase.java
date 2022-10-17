@@ -29,6 +29,7 @@ public class myDatabase {
     private final SupportSQLiteOpenHelper helper;
     private SupportSQLiteDatabase db;
 
+
     //constructor
     public myDatabase(Context ctx) {
         SupportSQLiteOpenHelper.Factory factory = new FrameworkSQLiteOpenHelperFactory();
@@ -63,7 +64,7 @@ public class myDatabase {
      * insert methods.
      */
     //InsertName is wrapper method, so the activity doesn't have to build  ContentValues for the insert.
-    public long insertName(String name, String cate, String date, String amot, String note, Integer value) {
+    public long insertName(String name, String cate, String date, String amot, String note) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(mySQLiteHelper.KEY_NAME, name);
         initialValues.put(mySQLiteHelper.KEY_CATE, cate);
@@ -98,39 +99,6 @@ public class myDatabase {
         return mCursor;
     }
 
-    //Retrieve one entry  METHOD we are supposed to use.
-    public Cursor get1name(String name) throws SQLException {
-        //the query parameter method is not included in supportSQLiteDatabase.
-        //So, use the helper function
-        Cursor mCursor = qbQuery(mySQLiteHelper.TABLE_NAME,   //table name
-                new String[]{mySQLiteHelper.KEY_ROWID, mySQLiteHelper.KEY_NAME, mySQLiteHelper.KEY_CATE,
-                        mySQLiteHelper.KEY_DATE, mySQLiteHelper.KEY_AMOT, mySQLiteHelper.KEY_NOTE},  //projection, ie columns.
-                mySQLiteHelper.KEY_NAME + "=\'" + name + "\'",  //selection,
-                null, // String[] selectionArgs,  not necessary here.
-                mySQLiteHelper.KEY_NAME// String sortOrder  by name as the sort.
-                //TODO: Find out if I need to add more fields or if name is all I need
-        );
-
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
-    }
-
-    //retrieve one entry, using RAW method  (ie sql statement)
-    public Cursor get1nameR(String name) {
-        //public Cursor query (String sql, Object[] bindArgs)
-        //sql 	the SQL query. The SQL string must not be ; terminated
-        //BindArgs 	You may include ?s in where clause in the query, which will be replaced by the values from selectionArgs. The values will be bound as Strings.
-        Cursor mCursor =
-                db.query("select Name, Amot from Expenses where Name=\'" + name + "\'", null);
-        //TODO: Find out if this is necessary. what is going on here?
-        //might not ever have to be called. that'd be nice.
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
-    }
 
     //this one uses the supportQueryBuilder that build a SupportSQLiteQuery for the query.
     public Cursor qbQuery(String TableName, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
@@ -141,6 +109,7 @@ public class myDatabase {
         //using the query builder to manage the actual query at this point.
         return db.query(qb.create());
     }
+
 
     /**
      * The following are update methods examples.
@@ -159,6 +128,7 @@ public class myDatabase {
     public int Update(String TableName, ContentValues values, String selection, String[] selectionArgs) {
         return db.update(TableName, CONFLICT_FAIL, values, selection, selectionArgs);
     }
+
 
     /**
      * the following are delete methods

@@ -3,6 +3,7 @@ package com.example.expenses;
 // https://www.c-sharpcorner.com/article/recyclerview-in-andriod-with-java/
 import android.app.Application;
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,21 @@ import java.util.List;
 public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
 
     expend exp;
+    private onItemClickListener listener;
 
     List<exData> list = Collections.emptyList();
     Context context;
-
+    private Cursor mCursor;
     public RecyclerView_Adapter(List<exData> data, Application application) {
         this.list = data;
         this.context = application;
+    }
+
+    public interface onItemClickListener {
+        void onItemClick(View itemview, String ID, String Name, String Cate, String Date, String Amot, String Note);
+    }
+    public void setOnItemClickListener(onItemClickListener listener){
+        this.listener = listener;
     }
 
     @NonNull
@@ -49,7 +58,9 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
             public void onClick(View view) {
                 //expend exp = new expend(context, list);
                 //exp.updateDialog();
-                //TODO: THE ISSUE IS THAT WHILE THE LISTENER WORKS, IT CAN'T CALL UPDATE DIALOG
+                //OnItemClickListener listen = listener;
+                //listen.onItemClick(view);
+                //TODO: These errors are holding me back. Otherwise, I am so close
                 //this is most likely due to the constructor. It needs to include everything that is
                 //required in updateDialog, which gets pretty nasty
             }

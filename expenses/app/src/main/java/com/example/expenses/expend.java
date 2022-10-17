@@ -2,8 +2,11 @@ package com.example.expenses;
 
 //@author Will Brant with assistance from Jim Ward
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.AbstractCursor;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +46,8 @@ import java.util.Objects;
 
 public class expend extends Fragment {
     Context cont;
+    CursorViewModel mCursor;
+   //MutableLiveData<Cursor> mCursor = new MutableLiveData<Cursor>();
     List<exData> list;
     public expend(){
     }
@@ -52,6 +58,7 @@ public class expend extends Fragment {
 
     final static String TAG = "Expend Fragment";
     private RecyclerView mRecyclerView;
+    myDatabase mydb; //TODO: Need to make sure that this is ok; may need to make "new myDatabase"
     String Name = "";
     String Cate = "";
     String Date = "";
@@ -66,16 +73,28 @@ public class expend extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        mydb = new myDatabase(getContext()); //TODO: Find out if I'm supposed to do this or not
+
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
-        //------------------------------------------------------------
         recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
         adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
+        //----------------------------trying to touch here-------------------------------
+
+        adapter.setOnItemClickListener(new RecyclerView_Adapter.onItemClickListener() {
+            @Override
+            public void onItemClick(View itemview, String ID, String Name, String Cate, String Date, String Amot, String Note) {
+                Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //------------------------------------------------------------
+
         recyclerView.setAdapter(adapter);
         if (!totalData.isEmpty()) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
-        //------------------------------------------------------------
 
         ItemTouchHelper.SimpleCallback toucher = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
             @Override
@@ -88,20 +107,11 @@ public class expend extends Fragment {
                     int item = viewHolder.getAdapterPosition();
                     totalData.remove(item);
                     adapter.notifyDataSetChanged();
-                    //TODO: UPDATE DB
+                    //TODO: UPDATE DB: Delete
                 }
             }
         };
-//        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                expend exp = new expend(context, list);
-//                exp.updateDialog();
-//                //TODO: THE ISSUE IS THAT WHILE THE LISTENER WORKS, IT CAN'T CALL UPDATE DIALOG
-//                //this is most likely due to the constructor. It needs to include everything that is
-//                //required in updateDialog, which gets pretty nasty
-//            }
-//        });
+
 
         ItemTouchHelper toucherHelper = new ItemTouchHelper(toucher);
         toucherHelper.attachToRecyclerView(recyclerView);
@@ -115,6 +125,15 @@ public class expend extends Fragment {
         });
         return myView;
     }
+
+
+
+
+
+
+
+
+
     //----------------------------------------------------------------------------------------------
 //    void stupid(Context som){
 //        Toast.makeText(som, "-wb", Toast.LENGTH_LONG).show();
@@ -163,7 +182,10 @@ public class expend extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                logControl(); //TODO: probably make logControl update the db. good place for it
+                //dbControlI(); //TODO: probably make logControl update the db. good place for it
+                logControl();
+                mCursor.add(Name, Cate, Date, Amot, Note);
+
                 totalData.add(new exData(Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
@@ -194,8 +216,9 @@ public class expend extends Fragment {
         Log.d(TAG, "NAME is " + Name);Log.d(TAG, "CATEGORY is " + Cate);
         Log.d(TAG, "DATE is " + Date);Log.d(TAG, "AMOUNT is " + Amot);
         Log.d(TAG, "NOTE is " + Note);
-        //update db
     }
+
+
 }
 //--------------------------------------------------------------------------------------------------
 
@@ -205,4 +228,25 @@ Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
 Name = "Name:     " + fields[0];Cate = "Category: " + fields[1];
                 Date = "Date:     " + fields[2];Amot = "Amount:   " + fields[3];
                 Note = "Note:     " + fields[4];
+void dbControlI(){
+    logControl();
+    ContentValues values = new ContentValues();
+    values.put(mySQLiteHelper.KEY_NAME, Name); // create new data for update
+    values.put(mySQLiteHelper.KEY_CATE, Cate);
+    values.put(mySQLiteHelper.KEY_DATE, Date);
+    values.put(mySQLiteHelper.KEY_AMOT, Amot);
+    values.put(mySQLiteHelper.KEY_NOTE, Note);
+    mydb.Insert(mySQLiteHelper.TABLE_NAME, values);
+}
+
+ void controlInsert(){
+        mydb.open();
+        mydb.insertName(Name, Cate, Date, Amot, Note);
+        mCursor.setValue(mydb.getAllNames());
+        mydb.close();
+    }
+    void controlDelete(){
+
+    }
  */
+
