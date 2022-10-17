@@ -26,7 +26,7 @@ public class mySQLiteHelper extends SupportSQLiteOpenHelper.Callback {
 
     public static final String DATABASE_NAME = "myDatabase.db";
     public static final String TABLE_NAME = "Expenses";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // Database creation sql statement
     private static final String DATABASE_CREATE =
