@@ -46,6 +46,13 @@ public class CursorViewModel extends AndroidViewModel {
         db.close();
         return ret;
     }
+    public int mUpdate(ContentValues values, String selection){
+        db.open();
+        int ret = db.Update("Expenses", values, selection, null);
+        myCursor.setValue(db.getAllNames());
+        db.close();
+        return ret;
+    }
 
     // this uses the Convenience method to delete something in the database and then update the cursor.
     public int Delete(String TableName, String selection, String[] selectionArgs) {
@@ -55,5 +62,4 @@ public class CursorViewModel extends AndroidViewModel {
         db.close();
         return ret;
     }
-
 }

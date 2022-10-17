@@ -116,11 +116,14 @@ public class myDatabase {
      */
 
     // This is a wrapper method, so that main code doesn't have ContentValues.
-    public boolean updateRow(String name, int amot) {
+    public boolean updateRow(String name, String cate, String date, String amot, String note) {
         ContentValues args = new ContentValues();
-        args.put(mySQLiteHelper.KEY_AMOT, amot); //originally had score of course, not amot
-        //TODO: Find out what's going on here. should i put() for each field or not?
-        //returns true if one or more updates happened, otherwise false.
+        args.put(mySQLiteHelper.KEY_NAME, name);
+        args.put(mySQLiteHelper.KEY_CATE, cate);
+        args.put(mySQLiteHelper.KEY_DATE, date);
+        args.put(mySQLiteHelper.KEY_AMOT, amot);
+        args.put(mySQLiteHelper.KEY_NOTE, note);
+
         return Update(mySQLiteHelper.TABLE_NAME, args, mySQLiteHelper.KEY_NAME + "= \'" + name + "\'", null) > 0;
     }
 

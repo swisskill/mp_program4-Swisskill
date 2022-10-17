@@ -28,12 +28,7 @@ public class View_Holder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //expend exp = new expend(context, list);
-                //exp.updateDialog();
                 listener.onItemClick(name.getTag().toString());
-                //TODO: These errors are holding me back. Otherwise, I am so close
-                //this is most likely due to the constructor. It needs to include everything that is
-                //required in updateDialog, which gets pretty nasty
             }
         });
 

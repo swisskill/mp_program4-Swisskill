@@ -28,6 +28,7 @@ public class mySQLiteHelper extends SupportSQLiteOpenHelper.Callback {
     public static final String TABLE_NAME = "Expenses";
     private static final int DATABASE_VERSION = 4;
 
+
     // Database creation sql statement
     private static final String DATABASE_CREATE =
             "CREATE TABLE " + TABLE_NAME + " (" +
