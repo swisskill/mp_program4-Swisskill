@@ -109,8 +109,7 @@ public class expend extends Fragment {
                     int item = viewHolder.getAdapterPosition();
                     totalData.remove(item);
                     adapter.notifyDataSetChanged();
-                    //mCursor.Delete("Expenses", );
-                    //TODO: UPDATE DB: Delete
+                    mCursor.Delete("Expenses", String.valueOf(ID), null);
                 }
             }
         };
@@ -146,10 +145,10 @@ public class expend extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
         final EditText et_name = textenter.findViewById(R.id.et_name);et_name.setText(Name);
-        final EditText et_cate = textenter.findViewById(R.id.et_cate);et_name.setText(Cate);
-        final EditText et_date = textenter.findViewById(R.id.et_date);et_name.setText(Date);
-        final EditText et_amot = textenter.findViewById(R.id.et_amot);et_name.setText(Amot);
-        final EditText et_note = textenter.findViewById(R.id.et_note);et_name.setText(Note);
+        final EditText et_cate = textenter.findViewById(R.id.et_cate);et_cate.setText(Cate);
+        final EditText et_date = textenter.findViewById(R.id.et_date);et_date.setText(Date);
+        final EditText et_amot = textenter.findViewById(R.id.et_amot);et_amot.setText(Amot);
+        final EditText et_note = textenter.findViewById(R.id.et_note);et_note.setText(Note);
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
                             requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
         builder.setView(textenter).setTitle("Update");
@@ -157,9 +156,9 @@ public class expend extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                logControl(); //TODO: probably make logControl update the db. good place for it
-                //int item = viewHolder.getAdapterPosition(); //TODO: UNTESTED
-                totalData.set(ID, new exData (Name, Cate, Date, Amot, Note)); //TODO: UNTESTED
+                logControl();
+                mCursor.Update("Expense", dbControl(), String.valueOf(ID), null);
+                totalData.set(ID, new exData (Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -185,11 +184,8 @@ public class expend extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                //dbControlI(); //TODO: probably make logControl update the db. good place for it
                 logControl();
-
                 mCursor.add(Name, Cate, Date, Amot, Note);
-
                 totalData.add(new exData(Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
@@ -206,11 +202,11 @@ public class expend extends Fragment {
        //I know this method is hard to look at. It's simple: it takes those edit texts, checks for empty
         //and updates those global variables as a string. Nice and easy.
         String rn, rc, rd, ra, ro; String nd = String.valueOf(LocalDate.now());
-        if (n.getText().toString().isEmpty()){Name = "";}else{Name=n.getText().toString();}
+        if (n.getText().toString().isEmpty()){Name = "Expense";}else{Name=n.getText().toString();}
         if (c.getText().toString().isEmpty()){Cate = "misc.";}else{Cate=c.getText().toString();}
         if (d.getText().toString().isEmpty()){Date = nd;}else{Date=d.getText().toString();}
         if (a.getText().toString().isEmpty()){Amot = "0";}else{Amot=a.getText().toString();}
-        if (o.getText().toString().isEmpty()){Note = "";}else{Note=o.getText().toString();}
+        if (o.getText().toString().isEmpty()){Note = "nothing. . .";}else{Note=o.getText().toString();}
     }
     void logCanceled(){
         Log.d(TAG, "dialog canceled");
@@ -220,6 +216,15 @@ public class expend extends Fragment {
         Log.d(TAG, "NAME is " + Name);Log.d(TAG, "CATEGORY is " + Cate);
         Log.d(TAG, "DATE is " + Date);Log.d(TAG, "AMOUNT is " + Amot);
         Log.d(TAG, "NOTE is " + Note);
+    }
+    ContentValues dbControl(){
+        ContentValues values = new ContentValues();
+        values.put(mySQLiteHelper.KEY_NAME, Name); // create new data for update
+        values.put(mySQLiteHelper.KEY_CATE, Cate);
+        values.put(mySQLiteHelper.KEY_DATE, Date);
+        values.put(mySQLiteHelper.KEY_AMOT, Amot);
+        values.put(mySQLiteHelper.KEY_NOTE, Note);
+        return values;
     }
 
 
@@ -232,16 +237,7 @@ Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
 Name = "Name:     " + fields[0];Cate = "Category: " + fields[1];
                 Date = "Date:     " + fields[2];Amot = "Amount:   " + fields[3];
                 Note = "Note:     " + fields[4];
-void dbControlI(){
-    logControl();
-    ContentValues values = new ContentValues();
-    values.put(mySQLiteHelper.KEY_NAME, Name); // create new data for update
-    values.put(mySQLiteHelper.KEY_CATE, Cate);
-    values.put(mySQLiteHelper.KEY_DATE, Date);
-    values.put(mySQLiteHelper.KEY_AMOT, Amot);
-    values.put(mySQLiteHelper.KEY_NOTE, Note);
-    mydb.Insert(mySQLiteHelper.TABLE_NAME, values);
-}
+
 
  void controlInsert(){
         mydb.open();
