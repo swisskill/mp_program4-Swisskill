@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -81,8 +82,14 @@ public class expend extends Fragment {
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
         recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
         adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
-        //----------------------------trying to touch here-------------------------------
-
+        recyclerView.setAdapter(adapter);
+        mCursor.getData().observe(getActivity(), new Observer<Cursor>() {
+            @Override
+            public void onChanged(Cursor cursor) {
+                adapter.setCursor(cursor);
+            }
+        });
+        //----------------------------Touch to update-------------------------------
         adapter.setOnItemClickListener(new RecyclerView_Adapter.onItemClickListener() {
             @Override
             public void onItemClick(String ID) {
@@ -90,10 +97,8 @@ public class expend extends Fragment {
                 updateDialog(Integer.valueOf(ID));
             }
         });
-
         //------------------------------------------------------------
 
-        recyclerView.setAdapter(adapter);
         if (!totalData.isEmpty()) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
@@ -109,7 +114,9 @@ public class expend extends Fragment {
                     int item = viewHolder.getAdapterPosition();
                     totalData.remove(item);
                     adapter.notifyDataSetChanged();
-                    //mCursor.Delete("Expenses", String.valueOf(ID), null);
+                    //Toast.makeText(getContext(), String.valueOf(getId()), Toast.LENGTH_LONG).show();
+                    //TODO: I don't think this works
+                    mCursor.Delete("Expenses", String.valueOf(getId()), null);
                 }
             }
         };

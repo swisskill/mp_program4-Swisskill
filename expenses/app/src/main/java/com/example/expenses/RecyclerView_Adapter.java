@@ -23,6 +23,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
     List<exData> list = Collections.emptyList();
     Context context;
     private Cursor mCursor;
+
     public RecyclerView_Adapter(List<exData> data, Application application) {
         this.list = data;
         this.context = application;
@@ -54,8 +55,11 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
         holder.note.setText(list.get(position).note);
         holder.name.setTag(position);
 
+    }
 
-
+    public void setCursor(Cursor c){
+        mCursor = c;
+        notifyDataSetChanged();
     }
 
     @Override
