@@ -48,7 +48,7 @@ import java.util.Objects;
 public class expend extends Fragment {
     Context cont;
     CursorViewModel mCursor;
-   //MutableLiveData<Cursor> mCursor = new MutableLiveData<Cursor>();
+    //MutableLiveData<Cursor> mCursor = new MutableLiveData<Cursor>();
     List<exData> list;
     public expend(){
     }
@@ -109,7 +109,7 @@ public class expend extends Fragment {
                     int item = viewHolder.getAdapterPosition();
                     totalData.remove(item);
                     adapter.notifyDataSetChanged();
-                    mCursor.Delete("Expenses", String.valueOf(ID), null);
+                    //mCursor.Delete("Expenses", String.valueOf(ID), null);
                 }
             }
         };
@@ -150,14 +150,14 @@ public class expend extends Fragment {
         final EditText et_amot = textenter.findViewById(R.id.et_amot);et_amot.setText(Amot);
         final EditText et_note = textenter.findViewById(R.id.et_note);et_note.setText(Note);
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
-                            requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
+                requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
         builder.setView(textenter).setTitle("Update");
         builder.setPositiveButton("Update", new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
                 logControl();
-                mCursor.Update("Expense", dbControl(), String.valueOf(ID), null);
+                mCursor.Update("Expenses", dbControl(), String.valueOf(ID), null);
                 totalData.set(ID, new exData (Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
@@ -199,7 +199,7 @@ public class expend extends Fragment {
     }
     //----------------------------------------------------------------------------------------------
     void checkEmpty(EditText n,EditText c,EditText d,EditText a,EditText o) {
-       //I know this method is hard to look at. It's simple: it takes those edit texts, checks for empty
+        //I know this method is hard to look at. It's simple: it takes those edit texts, checks for empty
         //and updates those global variables as a string. Nice and easy.
         String rn, rc, rd, ra, ro; String nd = String.valueOf(LocalDate.now());
         if (n.getText().toString().isEmpty()){Name = "Expense";}else{Name=n.getText().toString();}
@@ -249,4 +249,3 @@ Name = "Name:     " + fields[0];Cate = "Category: " + fields[1];
 
     }
  */
-
