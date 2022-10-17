@@ -21,11 +21,12 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
     expend exp;
     private onItemClickListener listener;
 
-    List<exData> list = Collections.emptyList();
+    //List<exData> list = Collections.emptyList();
+    int list;
     Context context;
     private Cursor mCursor;
-    public RecyclerView_Adapter(List<exData> data, Application application, Cursor c) {
-        this.list = data;
+    public RecyclerView_Adapter(int layout, Application application, Cursor c) {
+        this.list = layout;
         this.context = application;
         mCursor = c;
     }
@@ -72,6 +73,6 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
     }
     @Override
     public int getItemCount() {
-        return list.size();
+        return mCursor == null ? 0 : mCursor.getCount();
     }
 }
