@@ -81,7 +81,7 @@ public class expend extends Fragment {
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
         recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
-        adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
+        adapter = new RecyclerView_Adapter(mCursor, getActivity().getApplication());
         recyclerView.setAdapter(adapter);
         mCursor.getData().observe(getActivity(), new Observer<Cursor>() {
             @Override

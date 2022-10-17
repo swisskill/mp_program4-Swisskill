@@ -24,9 +24,10 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
     Context context;
     private Cursor mCursor;
 
-    public RecyclerView_Adapter(List<exData> data, Application application) {
+    public RecyclerView_Adapter(List<exData> data, Application application, Cursor c) {
         this.list = data;
         this.context = application;
+        this.mCursor = c;
     }
 
     public interface onItemClickListener {
