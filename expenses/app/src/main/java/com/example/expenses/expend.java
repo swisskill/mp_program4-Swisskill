@@ -46,8 +46,7 @@ import java.util.Objects;
  */
 
 public class expend extends Fragment {
-    Context cont;
-    CursorViewModel mCursor;
+
     //MutableLiveData<Cursor> mCursor = new MutableLiveData<Cursor>();
     List<exData> list;
     public expend(){
@@ -68,6 +67,9 @@ public class expend extends Fragment {
     RecyclerView recyclerView;
     RecyclerView_Adapter adapter;
     RecyclerView.ViewHolder viewHolder;
+    Context cont;
+    CursorViewModel mCursor;
+    Cursor cursor;
     List<exData> totalData = new ArrayList<>(); //TODO: will equal whatever is in the db upon startup
 
     //----------------------------------------------------------------------------------------------
@@ -80,7 +82,7 @@ public class expend extends Fragment {
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
         recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
-        adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
+        adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication(), cursor);
         //----------------------------trying to touch here-------------------------------
 
         adapter.setOnItemClickListener(new RecyclerView_Adapter.onItemClickListener() {
