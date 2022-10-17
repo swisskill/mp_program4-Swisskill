@@ -15,7 +15,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -76,33 +75,24 @@ public class expend extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mCursor = new ViewModelProvider(requireActivity()).get(CursorViewModel.class); //new
+        mCursor = new ViewModelProvider(requireActivity()).get(CursorViewModel.class);
 
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
         recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
-        adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication(), null); //new
+        adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication());
+        //----------------------------trying to touch here-------------------------------
 
-
-
-        //----------------------------Touch Update------------------------------
         adapter.setOnItemClickListener(new RecyclerView_Adapter.onItemClickListener() {
             @Override
             public void onItemClick(String ID) {
-                updateDialog(Integer.valueOf(ID));
-                //viewHolder.name.setText(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
-
                 //Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
+                updateDialog(Integer.valueOf(ID));
             }
         });
-        //-------------------------NEW-----------------------------------
-        mCursor.getData().observe(requireActivity(), new Observer<Cursor>() {
-            @Override
-            public void onChanged(Cursor cursor) {
-                adapter.setpCursor(cursor);
-            }
-        });
-        //_____--------------------------------------------------
+
+        //------------------------------------------------------------
+
         recyclerView.setAdapter(adapter);
         if (!totalData.isEmpty()) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -119,8 +109,7 @@ public class expend extends Fragment {
                     int item = viewHolder.getAdapterPosition();
                     totalData.remove(item);
                     adapter.notifyDataSetChanged();
-                    //mCursor.Delete("Expenses", );
-                    //TODO: UPDATE DB: Delete
+                    mCursor.Delete("Expenses", String.valueOf(ID), null);
                 }
             }
         };
@@ -160,7 +149,6 @@ public class expend extends Fragment {
         final EditText et_date = textenter.findViewById(R.id.et_date);et_date.setText(Date);
         final EditText et_amot = textenter.findViewById(R.id.et_amot);et_amot.setText(Amot);
         final EditText et_note = textenter.findViewById(R.id.et_note);et_note.setText(Note);
-
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
                             requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
         builder.setView(textenter).setTitle("Update");
@@ -168,10 +156,9 @@ public class expend extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                logControl(); //TODO: probably make logControl update the db. good place for it
-                //int item = viewHolder.getAdapterPosition();
-                mCursor.mUpdate(dbControl(), String.valueOf(ID));
-                totalData.set(ID, new exData (Name, Cate, Date, Amot, Note)); //TODO: UNTESTED
+                logControl();
+                mCursor.Update("Expense", dbControl(), String.valueOf(ID), null);
+                totalData.set(ID, new exData (Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -197,7 +184,6 @@ public class expend extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                //dbControlI(); //TODO: probably make logControl update the db. good place for it
                 logControl();
                 mCursor.add(Name, Cate, Date, Amot, Note);
                 totalData.add(new exData(Name, Cate, Date, Amot, Note));
@@ -216,7 +202,7 @@ public class expend extends Fragment {
        //I know this method is hard to look at. It's simple: it takes those edit texts, checks for empty
         //and updates those global variables as a string. Nice and easy.
         String rn, rc, rd, ra, ro; String nd = String.valueOf(LocalDate.now());
-        if (n.getText().toString().isEmpty()){Name = "expense";}else{Name=n.getText().toString();}
+        if (n.getText().toString().isEmpty()){Name = "Expense";}else{Name=n.getText().toString();}
         if (c.getText().toString().isEmpty()){Cate = "misc.";}else{Cate=c.getText().toString();}
         if (d.getText().toString().isEmpty()){Date = nd;}else{Date=d.getText().toString();}
         if (a.getText().toString().isEmpty()){Amot = "0";}else{Amot=a.getText().toString();}
@@ -232,7 +218,6 @@ public class expend extends Fragment {
         Log.d(TAG, "NOTE is " + Note);
     }
     ContentValues dbControl(){
-        logControl();
         ContentValues values = new ContentValues();
         values.put(mySQLiteHelper.KEY_NAME, Name); // create new data for update
         values.put(mySQLiteHelper.KEY_CATE, Cate);
@@ -241,6 +226,7 @@ public class expend extends Fragment {
         values.put(mySQLiteHelper.KEY_NOTE, Note);
         return values;
     }
+
 
 }
 //--------------------------------------------------------------------------------------------------
