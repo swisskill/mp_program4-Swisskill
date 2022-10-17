@@ -47,13 +47,14 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                expend exp = new expend(context, list);
-                exp.updateDialog();
+                //expend exp = new expend(context, list);
+                //exp.updateDialog();
                 //TODO: THE ISSUE IS THAT WHILE THE LISTENER WORKS, IT CAN'T CALL UPDATE DIALOG
                 //this is most likely due to the constructor. It needs to include everything that is
                 //required in updateDialog, which gets pretty nasty
             }
         });
+
     }
 
     @Override
