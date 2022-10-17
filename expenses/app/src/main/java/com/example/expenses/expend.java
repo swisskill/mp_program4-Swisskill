@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,7 +59,7 @@ public class expend extends Fragment {
 
     final static String TAG = "Expend Fragment";
     private RecyclerView mRecyclerView;
-    myDatabase mydb; //TODO: Need to make sure that this is ok; may need to make "new myDatabase"
+    //myDatabase mydb; //TODO: Need to make sure that this is ok; may need to make "new myDatabase"
     String Name = "";
     String Cate = "";
     String Date = "";
@@ -74,7 +75,7 @@ public class expend extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mydb = new myDatabase(getContext()); //TODO: Find out if I'm supposed to do this or not
+        mCursor = new ViewModelProvider(requireActivity()).get(CursorViewModel.class);
 
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
@@ -84,8 +85,9 @@ public class expend extends Fragment {
 
         adapter.setOnItemClickListener(new RecyclerView_Adapter.onItemClickListener() {
             @Override
-            public void onItemClick(View itemview, String ID, String Name, String Cate, String Date, String Amot, String Note) {
-                Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
+            public void onItemClick(String ID) {
+                //Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
+                updateDialog(Integer.valueOf(ID));
             }
         });
 
@@ -107,6 +109,7 @@ public class expend extends Fragment {
                     int item = viewHolder.getAdapterPosition();
                     totalData.remove(item);
                     adapter.notifyDataSetChanged();
+                    //mCursor.Delete("Expenses", );
                     //TODO: UPDATE DB: Delete
                 }
             }
@@ -138,7 +141,7 @@ public class expend extends Fragment {
 //    void stupid(Context som){
 //        Toast.makeText(som, "-wb", Toast.LENGTH_LONG).show();
 //    }
-    void updateDialog() {
+    void updateDialog(int ID) {
         //TODO: When called, Name, Cate etc need to already be called from
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
@@ -155,8 +158,8 @@ public class expend extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
                 logControl(); //TODO: probably make logControl update the db. good place for it
-                int item = viewHolder.getAdapterPosition(); //TODO: UNTESTED
-                totalData.set(item, new exData (Name, Cate, Date, Amot, Note)); //TODO: UNTESTED
+                //int item = viewHolder.getAdapterPosition(); //TODO: UNTESTED
+                totalData.set(ID, new exData (Name, Cate, Date, Amot, Note)); //TODO: UNTESTED
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -184,6 +187,7 @@ public class expend extends Fragment {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
                 //dbControlI(); //TODO: probably make logControl update the db. good place for it
                 logControl();
+
                 mCursor.add(Name, Cate, Date, Amot, Note);
 
                 totalData.add(new exData(Name, Cate, Date, Amot, Note));

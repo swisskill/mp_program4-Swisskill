@@ -29,7 +29,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
     }
 
     public interface onItemClickListener {
-        void onItemClick(View itemview, String ID, String Name, String Cate, String Date, String Amot, String Note);
+        void onItemClick(String ID);
     }
     public void setOnItemClickListener(onItemClickListener listener){
         this.listener = listener;
@@ -40,7 +40,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
     public View_Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Inflate the layout, initialize the View Holder
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_layout, parent, false);
-        View_Holder holder = new View_Holder(v);
+        View_Holder holder = new View_Holder(v, listener);
         return holder;
     }
 
@@ -52,19 +52,9 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
         holder.date.setText(list.get(position).date);
         holder.amot.setText(list.get(position).amot);
         holder.note.setText(list.get(position).note);
+        holder.name.setTag(position);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //expend exp = new expend(context, list);
-                //exp.updateDialog();
-                //OnItemClickListener listen = listener;
-                //listen.onItemClick(view);
-                //TODO: These errors are holding me back. Otherwise, I am so close
-                //this is most likely due to the constructor. It needs to include everything that is
-                //required in updateDialog, which gets pretty nasty
-            }
-        });
+
 
     }
 
