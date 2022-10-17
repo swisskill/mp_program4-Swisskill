@@ -1,6 +1,7 @@
 package com.example.expenses;
 //@author Will Brant with help from
 // https://www.c-sharpcorner.com/article/recyclerview-in-andriod-with-java/
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,10 +21,12 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
     expend exp;
     private onItemClickListener listener;
 
+    List<exData> list = Collections.emptyList();
     Context context;
-    private Cursor mCursor;
+    Cursor mCursor;
 
-    public RecyclerView_Adapter(Application application, Cursor c) {
+    public RecyclerView_Adapter(List<exData> data, Application application, Cursor c) {
+        this.list = data;
         this.context = application;
         this.mCursor = c;
     }
@@ -44,14 +47,20 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
         return holder;
     }
 
+    @SuppressLint("Range")
     @Override
     public void onBindViewHolder(@NonNull View_Holder holder, int position) {
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
-        holder.name.setText(list.get(position).name);
-        holder.cate.setText(list.get(position).cate);
-        holder.date.setText(list.get(position).date);
-        holder.amot.setText(list.get(position).amot);
-        holder.note.setText(list.get(position).note);
+        holder.name.setText(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
+        holder.cate.setText(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_CATE)));
+        holder.date.setText(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_DATE)));
+        holder.amot.setText(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_AMOT)));
+        holder.note.setText(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_NOTE)));
+
+//        holder.cate.setText(list.get(position).cate);
+//        holder.date.setText(list.get(position).date);
+//        holder.amot.setText(list.get(position).amot);
+//        holder.note.setText(list.get(position).note);
         holder.name.setTag(position);
 
     }

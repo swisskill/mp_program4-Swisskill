@@ -70,7 +70,7 @@ public class expend extends Fragment {
     RecyclerView_Adapter adapter;
     RecyclerView.ViewHolder viewHolder;
     List<exData> totalData = new ArrayList<>(); //TODO: will equal whatever is in the db upon startup
-
+    Cursor cursor;
     //----------------------------------------------------------------------------------------------
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -81,7 +81,7 @@ public class expend extends Fragment {
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
         recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
-        adapter = new RecyclerView_Adapter(getActivity().getApplication(), mCursor);
+        adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication(), cursor);
         recyclerView.setAdapter(adapter);
         mCursor.getData().observe(getActivity(), new Observer<Cursor>() {
             @Override
@@ -113,10 +113,13 @@ public class expend extends Fragment {
                 if(direction==ItemTouchHelper.RIGHT){
                     int item = viewHolder.getAdapterPosition();
                     totalData.remove(item);
-                    adapter.notifyDataSetChanged();
                     //Toast.makeText(getContext(), String.valueOf(getId()), Toast.LENGTH_LONG).show();
                     //TODO: I don't think this works
                     mCursor.Delete("Expenses", String.valueOf(getId()), null);
+                    adapter.notifyDataSetChanged();
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
                 }
             }
         };
@@ -167,6 +170,7 @@ public class expend extends Fragment {
                 mCursor.Update("Expenses", dbControl(), String.valueOf(ID), null);
                 totalData.set(ID, new exData (Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -195,6 +199,7 @@ public class expend extends Fragment {
                 mCursor.add(Name, Cate, Date, Amot, Note);
                 totalData.add(new exData(Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
