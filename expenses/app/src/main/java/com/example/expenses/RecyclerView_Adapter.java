@@ -30,6 +30,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
         mCursor = c;
     }
 
+
     public interface onItemClickListener {
         void onItemClick(String ID);
     }
@@ -51,7 +52,6 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
     public void onBindViewHolder(@NonNull View_Holder holder, int position) {
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
         mCursor.moveToPosition(position);
-
         holder.name.setText(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_NAME))); //todo: maybe put this in?
         holder.cate.setText(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_CATE))); //todo: maybe put this in?
         holder.date.setText(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_DATE))); //todo: maybe put this in?
@@ -66,7 +66,10 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
 //        holder.note.setText(list.get(position).note);
         holder.name.setTag(position);
     }
-
+    public void setCursor(Cursor cursor) {
+        mCursor = cursor;
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return list.size();

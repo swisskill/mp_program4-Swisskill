@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -82,7 +83,14 @@ public class expend extends Fragment {
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
         recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
-        adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication(), cursor);
+        adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication(), null);
+        mCursor.getData().observe(getActivity(), new Observer<Cursor>() {
+            @Override
+            public void onChanged(Cursor cursor) {
+                adapter.setCursor(cursor);
+            }
+        });
+
         //----------------------------trying to touch here-------------------------------
 
         adapter.setOnItemClickListener(new RecyclerView_Adapter.onItemClickListener() {
