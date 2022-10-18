@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,8 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<View_Holder> {
 //        holder.date.setText(list.get(position).date);
 //        holder.amot.setText(list.get(position).amot);
 //        holder.note.setText(list.get(position).note);
-        holder.name.setTag(position);
+        Log.wtf("ID is ", mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_ROWID) ));
+        holder.name.setTag(mCursor.getString(mCursor.getColumnIndex(mySQLiteHelper.KEY_ROWID)));
     }
     public void setCursor(Cursor cursor) {
         mCursor = cursor;

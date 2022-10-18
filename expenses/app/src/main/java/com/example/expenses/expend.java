@@ -101,6 +101,7 @@ public class expend extends Fragment {
             @Override
             public void onItemClick(String ID) {
                 //Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
+                Log.wtf("update click ", ID);
                 updateDialog(Integer.valueOf(ID));
             }
         });
@@ -120,14 +121,18 @@ public class expend extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 if(direction==ItemTouchHelper.RIGHT){
+
+                    String ID = ((View_Holder)viewHolder).name.getTag().toString();
+
+                    Log.d("Swipe id", ID);
+
                     int item = viewHolder.getAdapterPosition();
                     //totalData.remove(item);
-                    mCursor.Delete("Expenses", String.valueOf(getId()), null); //they all have the same ID
+                    mCursor.Delete("Expenses", ID, null); //they all have the same ID
                     adapter.notifyDataSetChanged();
                 }
             }
         };
-
 
         ItemTouchHelper toucherHelper = new ItemTouchHelper(toucher);
         toucherHelper.attachToRecyclerView(recyclerView);
@@ -146,34 +151,34 @@ public class expend extends Fragment {
 
 
 
-
-
-
-
     //----------------------------------------------------------------------------------------------
 //    void stupid(Context som){
 //        Toast.makeText(som, "-wb", Toast.LENGTH_LONG).show();
 //    }
     void updateDialog(int ID) {
-        //TODO: When called, Name, Cate etc need to already be called from
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
-        final EditText et_name = textenter.findViewById(R.id.et_name);et_name.setText(Name);
-        final EditText et_cate = textenter.findViewById(R.id.et_cate);et_cate.setText(Cate);
-        final EditText et_date = textenter.findViewById(R.id.et_date);et_date.setText(Date);
-        final EditText et_amot = textenter.findViewById(R.id.et_amot);et_amot.setText(Amot);
-        final EditText et_note = textenter.findViewById(R.id.et_note);et_note.setText(Note);
+        //the right way to do this is to go to the db for the values and then you can set them in there if you want holder
+
+        final EditText set_name = textenter.findViewById(R.id.et_name);//set_name.setText(Name);
+        final EditText set_cate = textenter.findViewById(R.id.et_cate);//set_cate.setText(Cate);
+        final EditText set_date = textenter.findViewById(R.id.et_date);//set_date.setText(Date);
+        final EditText set_amot = textenter.findViewById(R.id.et_amot);//set_amot.setText(Amot);
+        final EditText set_note = textenter.findViewById(R.id.et_note);//set_note.setText(Note);
+
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
                 requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
         builder.setView(textenter).setTitle("Update");
         builder.setPositiveButton("Update", new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
+                Log.d("update", String.valueOf(ID));
+                checkEmpty(set_name,set_cate,set_date,set_amot,set_note);
                 logControl();
                 mCursor.Update("Expenses", dbControl(), String.valueOf(ID), null);
                 //totalData.set(ID, new exData (Name, Cate, Date, Amot, Note));
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+               // recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 adapter.notifyDataSetChanged();
 
             }
@@ -199,11 +204,10 @@ public class expend extends Fragment {
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
+                Log.d("Who knows", String.valueOf(getId()));
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
                 logControl();
                 mCursor.add(Name, Cate, Date, Amot, Note);
-                //totalData.add(new exData(Name, Cate, Date, Amot, Note));
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

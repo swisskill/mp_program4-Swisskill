@@ -92,7 +92,7 @@ public class myDatabase {
                         mySQLiteHelper.KEY_DATE, mySQLiteHelper.KEY_AMOT, mySQLiteHelper.KEY_NOTE},  //projection, ie columns.
                 null,  //selection,  we want everything.
                 null, // String[] selectionArgs,  again, we want everything.
-                mySQLiteHelper.KEY_NAME// String sortOrder  by name as the sort.
+                null//mySQLiteHelper.KEY_NAME// String sortOrder  by name as the sort.
         );
         if (mCursor != null)  //make sure cursor is not empty!
             mCursor.moveToFirst();
@@ -101,6 +101,10 @@ public class myDatabase {
 
 
     //this one uses the supportQueryBuilder that build a SupportSQLiteQuery for the query.
+    //proejction is all the column names
+    //last two are null
+    //build a function in cursor view model.
+    //
     public Cursor qbQuery(String TableName, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SupportSQLiteQueryBuilder qb = SupportSQLiteQueryBuilder.builder(TableName);
         qb.columns(projection);
@@ -126,7 +130,8 @@ public class myDatabase {
 
     // this is a generic method to update something from the database, uses the Convenience method.
     public int Update(String TableName, ContentValues values, String selection, String[] selectionArgs) {
-        return db.update(TableName, CONFLICT_FAIL, values, selection, selectionArgs);
+         String helpSelect = mySQLiteHelper.KEY_ROWID + "=" + selection;
+        return db.update(TableName, CONFLICT_FAIL, values, helpSelect, selectionArgs);
     }
 
 
@@ -135,7 +140,8 @@ public class myDatabase {
      */
     // this uses the Convenience method to delete something from the database.
     public int Delete(String TableName, String selection, String[] selectionArgs) {
-        return db.delete(TableName, selection, selectionArgs);
+        String helpSelect = mySQLiteHelper.KEY_ROWID + "=" + selection;
+        return db.delete(TableName, helpSelect, selectionArgs);
     }
 
     //remove all entries from the CurrentBoard
