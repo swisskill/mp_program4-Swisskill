@@ -46,12 +46,6 @@ public class myDatabase {
         db = helper.getWritableDatabase();
     }
 
-    //returns true if db is open.  Helper method.
-    public boolean isOpen() throws SQLException {
-        return db.isOpen();
-    }
-
-    //---closes the database---
     public void close() {
         try {
             db.close();
@@ -60,9 +54,6 @@ public class myDatabase {
         }
     }
 
-    /**
-     * insert methods.
-     */
     //InsertName is wrapper method, so the activity doesn't have to build  ContentValues for the insert.
     public long insertName(String name, String cate, String date, String amot, String note) {
         ContentValues initialValues = new ContentValues();
@@ -79,12 +70,6 @@ public class myDatabase {
     public long Insert(String TableName, ContentValues values) {
         return db.insert(TableName, CONFLICT_FAIL, values);
     }
-
-    /**
-     * The following a different ways to query the database.  They all return a Cursor.
-     */
-
-    //get all the rows.
     public Cursor getAllNames() {
         //SELECT KEY_NAME, KEY_SCORE FROM DATABASE_TABLE SORTBY KEY_NAME;
         Cursor mCursor = qbQuery(mySQLiteHelper.TABLE_NAME,   //table name
@@ -99,12 +84,7 @@ public class myDatabase {
         return mCursor;
     }
 
-
-    //this one uses the supportQueryBuilder that build a SupportSQLiteQuery for the query.
-    //proejction is all the column names
-    //last two are null
     //build a function in cursor view model.
-    //
     public Cursor qbQuery(String TableName, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SupportSQLiteQueryBuilder qb = SupportSQLiteQueryBuilder.builder(TableName);
         qb.columns(projection);
@@ -114,38 +94,32 @@ public class myDatabase {
         return db.query(qb.create());
     }
 
-
-    /**
-     * The following are update methods examples.
-     */
-
-    // This is a wrapper method, so that main code doesn't have ContentValues.
-    public boolean updateRow(String name, int amot) {
-        ContentValues args = new ContentValues();
-        args.put(mySQLiteHelper.KEY_AMOT, amot); //originally had score of course, not amot
-        //returns true if one or more updates happened, otherwise false.
-        return Update(mySQLiteHelper.TABLE_NAME, args, mySQLiteHelper.KEY_NAME + "= \'" + name + "\'", null) > 0;
-    }
-
-    // this is a generic method to update something from the database, uses the Convenience method.
     public int Update(String TableName, ContentValues values, String selection, String[] selectionArgs) {
          String helpSelect = mySQLiteHelper.KEY_ROWID + "=" + selection;
         return db.update(TableName, CONFLICT_FAIL, values, helpSelect, selectionArgs);
     }
 
-
-    /**
-     * the following are delete methods
-     */
-    // this uses the Convenience method to delete something from the database.
     public int Delete(String TableName, String selection, String[] selectionArgs) {
         String helpSelect = mySQLiteHelper.KEY_ROWID + "=" + selection;
         return db.delete(TableName, helpSelect, selectionArgs);
     }
-
+}
+//-------------------------------------------------------------------------------------------------
+/*
+// This is a wrapper method, so that main code doesn't have ContentValues.
+public boolean updateRow(String name, int amot) {
+    ContentValues args = new ContentValues();
+    args.put(mySQLiteHelper.KEY_AMOT, amot); //originally had score of course, not amot
+    //returns true if one or more updates happened, otherwise false.
+    return Update(mySQLiteHelper.TABLE_NAME, args, mySQLiteHelper.KEY_NAME + "= \'" + name + "\'", null) > 0;
+}
     //remove all entries from the CurrentBoard
     public void emptydb() {
         db.delete(mySQLiteHelper.TABLE_NAME, null, null);
     }
 
-}
+    //returns true if db is open.  Helper method.
+    public boolean isOpen() throws SQLException {
+        return db.isOpen();
+    }
+*/

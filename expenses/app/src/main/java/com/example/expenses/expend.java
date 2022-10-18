@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -132,9 +133,13 @@ public class expend extends Fragment {
         final EditText set_date = textenter.findViewById(R.id.et_date);//set_date.setText(Date);
         final EditText set_amot = textenter.findViewById(R.id.et_amot);//set_amot.setText(Amot);
         final EditText set_note = textenter.findViewById(R.id.et_note);//set_note.setText(Note);
-        if(dial == 0){dialType="Update";}else{dialType="Add";}
+        if(dial == 0){dialType="Update";
+           // TextView some = mCursor.Query(String.valueOf(ID));
+            Log.d("Some ", String.valueOf(ID));
+        }else{dialType="Add";}
         //------------------------------For later maybe
         // cursor = mCursor.Query(String.valueOf(ID));
+
         //set_name.setText(cursor.getString(cursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
         //------------------------------
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
