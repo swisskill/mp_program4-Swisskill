@@ -102,7 +102,7 @@ public class expend extends Fragment {
             public void onItemClick(String ID) {
                 //Toast.makeText(getContext(), "-wb", Toast.LENGTH_LONG).show();
                 Log.wtf("update click ", ID);
-                updateDialog(Integer.valueOf(ID));
+                Dialog(Integer.valueOf(ID), 0);
             }
         });
 
@@ -125,7 +125,6 @@ public class expend extends Fragment {
                     String ID = ((View_Holder)viewHolder).name.getTag().toString();
                     Log.d("Swipe id", ID);
                     int item = viewHolder.getAdapterPosition();
-                    //totalData.remove(item);
                     mCursor.Delete("Expenses", ID, null); //they all have the same ID
                     adapter.notifyDataSetChanged();
                 }
@@ -139,31 +138,22 @@ public class expend extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog();
+                Dialog(0,1);
             }
         });
         return myView;
     }
-
-
-
-
-
-    //----------------------------------------------------------------------------------------------
-//    void stupid(Context som){
-//        Toast.makeText(som, "-wb", Toast.LENGTH_LONG).show();
-//    }
-    @SuppressLint("Range")
-    void updateDialog(int ID) {
+    //---------------------------------------------------------------------------------------------
+    void Dialog(int ID, int dial) {
+        String dialType;
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
-        //the right way to do this is to go to the db for the values and then you can set them in there if you want holder
-
         final EditText set_name = textenter.findViewById(R.id.et_name);//set_name.setText(Name);
         final EditText set_cate = textenter.findViewById(R.id.et_cate);//set_cate.setText(Cate);
         final EditText set_date = textenter.findViewById(R.id.et_date);//set_date.setText(Date);
         final EditText set_amot = textenter.findViewById(R.id.et_amot);//set_amot.setText(Amot);
         final EditText set_note = textenter.findViewById(R.id.et_note);//set_note.setText(Note);
+        if(dial == 0){dialType="Update";}else{dialType="Add";}
 
        // cursor = mCursor.Query(String.valueOf(ID));
         //set_name.setText(cursor.getString(cursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
@@ -171,16 +161,18 @@ public class expend extends Fragment {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
                 requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
-        builder.setView(textenter).setTitle("Update");
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener(){
+        builder.setView(textenter).setTitle(dialType);
+        builder.setPositiveButton(dialType, new DialogInterface.OnClickListener(){
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                Log.d("update", String.valueOf(ID));
                 checkEmpty(set_name,set_cate,set_date,set_amot,set_note);
                 logControl();
-                mCursor.Update("Expenses", dbControl(), String.valueOf(ID), null);
+                if(dial == 1){
+                    mCursor.add(Name, Cate, Date, Amot, Note);
+                } else{
+                    mCursor.Update("Expenses", dbControl(), String.valueOf(ID), null);
+                }
                 adapter.notifyDataSetChanged();
-
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -190,34 +182,7 @@ public class expend extends Fragment {
         });
         builder.show();
     }
-    //----------------------------------------------------------------------------------------------
-    void showDialog() {
-        LayoutInflater inflater = LayoutInflater.from(requireContext());
-        final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
-        final EditText et_name = textenter.findViewById(R.id.et_name);
-        final EditText et_cate = textenter.findViewById(R.id.et_cate);
-        final EditText et_date = textenter.findViewById(R.id.et_date);
-        final EditText et_amot = textenter.findViewById(R.id.et_amot);
-        final EditText et_note = textenter.findViewById(R.id.et_note);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
-        builder.setView(textenter).setTitle("Add");
-        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                Log.d("Who knows", String.valueOf(getId()));
-                checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
-                logControl();
-                mCursor.add(Name, Cate, Date, Amot, Note);
-            }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                logCanceled();
-                dialog.cancel();
-            }
-        });
-        builder.show();
-    }
-    //----------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
     void checkEmpty(EditText n,EditText c,EditText d,EditText a,EditText o) {
         //I know this method is hard to look at. It's simple: it takes those edit texts, checks for empty
         //and updates those global variables as a string. Nice and easy.
@@ -228,6 +193,7 @@ public class expend extends Fragment {
         if (a.getText().toString().isEmpty()){Amot = "0";}else{Amot=a.getText().toString();}
         if (o.getText().toString().isEmpty()){Note = "nothing. . .";}else{Note=o.getText().toString();}
     }
+    //---------------------------------------------------------------------------------------------
     void logCanceled(){
         Log.d(TAG, "dialog canceled");
     }
@@ -246,6 +212,7 @@ public class expend extends Fragment {
         values.put(mySQLiteHelper.KEY_NOTE, Note);
         return values;
     }
+    //---------------------------------------------------------------------------------------------
 
 
 }
@@ -268,4 +235,32 @@ Name = "Name:     " + fields[0];Cate = "Category: " + fields[1];
     void controlDelete(){
 
     }
+        //----------------------------------------------------------------------------------------------
+//    void showDialog() {
+//        LayoutInflater inflater = LayoutInflater.from(requireContext());
+//        final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
+//        final EditText et_name = textenter.findViewById(R.id.et_name);
+//        final EditText et_cate = textenter.findViewById(R.id.et_cate);
+//        final EditText et_date = textenter.findViewById(R.id.et_date);
+//        final EditText et_amot = textenter.findViewById(R.id.et_amot);
+//        final EditText et_note = textenter.findViewById(R.id.et_note);
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
+//        builder.setView(textenter).setTitle("Add");
+//        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int id) {
+//                Log.d("Who knows", String.valueOf(getId()));
+//                checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
+//                logControl();
+//                mCursor.add(Name, Cate, Date, Amot, Note);
+//            }
+//        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int id) {
+//                logCanceled();
+//                dialog.cancel();
+//            }
+//        });
+//        builder.show();
+//    }
+    //----------------------------------------------------------------------------------------------
  */
