@@ -46,7 +46,6 @@ public class mySQLiteHelper extends SupportSQLiteOpenHelper.Callback {
 
     @Override
     public void onCreate(SupportSQLiteDatabase db) {
-        //NOTE only called when the database is initial created!
         db.execSQL(DATABASE_CREATE);
     }
 

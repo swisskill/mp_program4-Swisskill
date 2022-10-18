@@ -57,8 +57,6 @@ public class expend extends Fragment {
     RecyclerView recyclerView;
     RecyclerView_Adapter adapter;
     CursorViewModel mCursor;
-    List<exData> totalData = new ArrayList<>(); //TODO: will equal whatever is in the db upon startup
-
     //----------------------------------------------------------------------------------------------
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -89,9 +87,7 @@ public class expend extends Fragment {
         });
         //---------------------------Set Recycler---------------------------------
         recyclerView.setAdapter(adapter);
-        if (!totalData.isEmpty()) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //---------------------------Swipe to Delete---------------------------------
         ItemTouchHelper.SimpleCallback toucher = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
             @Override
@@ -129,24 +125,21 @@ public class expend extends Fragment {
         String dialType;
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
-        final EditText set_name = textenter.findViewById(R.id.et_name);//set_name.setText(Name);
-        final EditText set_cate = textenter.findViewById(R.id.et_cate);//set_cate.setText(Cate);
-        final EditText set_date = textenter.findViewById(R.id.et_date);//set_date.setText(Date);
-        final EditText set_amot = textenter.findViewById(R.id.et_amot);//set_amot.setText(Amot);
-        final EditText set_note = textenter.findViewById(R.id.et_note);//set_note.setText(Note);
-        if(dial == 0){dialType="Update";
-           Cursor pCursor = mCursor.Query(String.valueOf(ID));
-            set_name.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_NAME))); //todo: maybe put this in?
-            set_cate.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_CATE))); //todo: maybe put this in?
-            set_date.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_DATE))); //todo: maybe put this in?
-            set_amot.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_AMOT))); //todo: maybe put this in?
-            set_note.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_NOTE))); //todo: maybe put this in?
-           //Log.d("Some ", String.valueOf(some));
+        final EditText set_name = textenter.findViewById(R.id.et_name);
+        final EditText set_cate = textenter.findViewById(R.id.et_cate);
+        final EditText set_date = textenter.findViewById(R.id.et_date);
+        final EditText set_amot = textenter.findViewById(R.id.et_amot);
+        final EditText set_note = textenter.findViewById(R.id.et_note);
+        if(dial == 0){
+            dialType="Update";
+            Cursor pCursor = mCursor.Query(String.valueOf(ID));
+            set_name.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
+            set_cate.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_CATE)));
+            set_date.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_DATE)));
+            set_amot.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_AMOT)));
+            set_note.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_NOTE)));
         }else{dialType="Add";}
-        //------------------------------For later maybe
-        // cursor = mCursor.Query(String.valueOf(ID));
-        //set_name.setText(cursor.getString(cursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
-        //------------------------------
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
                 requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
         builder.setView(textenter).setTitle(dialType);
@@ -178,7 +171,9 @@ public class expend extends Fragment {
         if (n.getText().toString().isEmpty()){Name = "Expense";}else{Name=n.getText().toString();}
         if (c.getText().toString().isEmpty()){Cate = "misc.";}else{Cate=c.getText().toString();}
         if (d.getText().toString().isEmpty()){Date = nd;}else{Date=d.getText().toString();}
-        if (a.getText().toString().isEmpty()){Amot = "0";}else{Amot=a.getText().toString();}
+        if (a.getText().toString().isEmpty()){Amot = "0";}
+        else if (!isFloat(a.getText().toString())){
+            Amot= "0";} else{Amot=a.getText().toString();}
         if (o.getText().toString().isEmpty()){Note = "nothing. . .";}else{Note=o.getText().toString();}
     }
     //---------------------------------------------------------------------------------------------
@@ -199,6 +194,20 @@ public class expend extends Fragment {
         values.put(mySQLiteHelper.KEY_AMOT, Amot);
         values.put(mySQLiteHelper.KEY_NOTE, Note);
         return values;
+    }
+    public boolean isFloat(String amot) {
+        float check;
+        if(amot == null || amot.equals("")) {return false;}
+        try {
+            check = Float.parseFloat(amot);
+            Log.wtf("Amount:", "is float");
+            return true;
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(),"Please enter in a valid amount ", Toast.LENGTH_LONG).show();
+            Log.wtf("Amount:", "not float");
+
+        }
+        return false;
     }
     //---------------------------------------------------------------------------------------------
 

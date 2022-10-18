@@ -1,6 +1,7 @@
 package com.example.expenses;
 
 //@author Will Brant
+//WARNING: DEPRECATED FILE
 public class exData {
     public String name;
     public String cate;

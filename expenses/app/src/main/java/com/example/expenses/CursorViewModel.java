@@ -64,35 +64,9 @@ public class CursorViewModel extends AndroidViewModel {
                 mySQLiteHelper.KEY_DATE, mySQLiteHelper.KEY_AMOT, mySQLiteHelper.KEY_NOTE};
         String helpSelect = mySQLiteHelper.KEY_ROWID + "=" + selection;
         db.open();
-        //myCursor.setValue(db.qbQuery("Expenses", projection, helpSelect, null, null));
         Cursor newCursor = db.qbQuery("Expenses", projection, helpSelect, null, null);
-        newCursor.moveToPosition(0);
+        newCursor.moveToPosition(0); //apparently that works
         db.close();
         return newCursor;
     }
 }
-
-//-----------------------------BIN------------------------------------------------
-
-
-//    public Cursor getAllNames() {
-//        //SELECT KEY_NAME, KEY_SCORE FROM DATABASE_TABLE SORTBY KEY_NAME;
-//        Cursor mCursor = qbQuery(mySQLiteHelper.TABLE_NAME,   //table name
-//                new String[]{mySQLiteHelper.KEY_ROWID, mySQLiteHelper.KEY_NAME, mySQLiteHelper.KEY_CATE,
-//                        mySQLiteHelper.KEY_DATE, mySQLiteHelper.KEY_AMOT, mySQLiteHelper.KEY_NOTE},  //projection, ie columns.
-//                null,  //selection,  we want everything.
-//                null, // String[] selectionArgs,  again, we want everything.
-//                null//mySQLiteHelper.KEY_NAME// String sortOrder  by name as the sort.
-//        );
-//        if (mCursor != null)  //make sure cursor is not empty!
-//            mCursor.moveToFirst();
-//        return mCursor;
-//    }
-//    public Cursor qbQuery(String TableName, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-//        SupportSQLiteQueryBuilder qb = SupportSQLiteQueryBuilder.builder(TableName);
-//        qb.columns(projection);
-//        qb.selection(selection, selectionArgs);
-//        qb.orderBy(sortOrder);
-//        //using the query builder to manage the actual query at this point.
-//        return db.query(qb.create());
-//    }
