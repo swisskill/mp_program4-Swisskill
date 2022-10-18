@@ -2,6 +2,7 @@ package com.example.expenses;
 
 //@author Will Brant with assistance from Jim Ward
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -48,7 +49,6 @@ import java.util.Objects;
 
 public class expend extends Fragment {
 
-    //MutableLiveData<Cursor> mCursor = new MutableLiveData<Cursor>();
     List<exData> list;
     public expend(){
     }
@@ -123,9 +123,7 @@ public class expend extends Fragment {
                 if(direction==ItemTouchHelper.RIGHT){
 
                     String ID = ((View_Holder)viewHolder).name.getTag().toString();
-
                     Log.d("Swipe id", ID);
-
                     int item = viewHolder.getAdapterPosition();
                     //totalData.remove(item);
                     mCursor.Delete("Expenses", ID, null); //they all have the same ID
@@ -155,6 +153,7 @@ public class expend extends Fragment {
 //    void stupid(Context som){
 //        Toast.makeText(som, "-wb", Toast.LENGTH_LONG).show();
 //    }
+    @SuppressLint("Range")
     void updateDialog(int ID) {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         final View textenter = inflater.inflate(R.layout.fragment_my_dialog, null);
@@ -165,6 +164,9 @@ public class expend extends Fragment {
         final EditText set_date = textenter.findViewById(R.id.et_date);//set_date.setText(Date);
         final EditText set_amot = textenter.findViewById(R.id.et_amot);//set_amot.setText(Amot);
         final EditText set_note = textenter.findViewById(R.id.et_note);//set_note.setText(Note);
+
+       // cursor = mCursor.Query(String.valueOf(ID));
+        //set_name.setText(cursor.getString(cursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
 
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
@@ -177,8 +179,6 @@ public class expend extends Fragment {
                 checkEmpty(set_name,set_cate,set_date,set_amot,set_note);
                 logControl();
                 mCursor.Update("Expenses", dbControl(), String.valueOf(ID), null);
-                //totalData.set(ID, new exData (Name, Cate, Date, Amot, Note));
-               // recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 adapter.notifyDataSetChanged();
 
             }

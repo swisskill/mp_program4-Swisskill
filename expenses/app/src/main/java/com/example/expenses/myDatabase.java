@@ -123,7 +123,6 @@ public class myDatabase {
     public boolean updateRow(String name, int amot) {
         ContentValues args = new ContentValues();
         args.put(mySQLiteHelper.KEY_AMOT, amot); //originally had score of course, not amot
-        //TODO: Find out what's going on here. should i put() for each field or not?
         //returns true if one or more updates happened, otherwise false.
         return Update(mySQLiteHelper.TABLE_NAME, args, mySQLiteHelper.KEY_NAME + "= \'" + name + "\'", null) > 0;
     }
