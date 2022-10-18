@@ -39,27 +39,15 @@ import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
- THINGS TO IMPLEMENT:
- * SWIPING
- * REFRESHING
- * DATABASE
- * make sure totalData grabs from db upon startup
+ * put in update fields when clicking
  * make sure dollar amounts are valid (no multi decimal)
  */
 
 public class expend extends Fragment {
-
-    List<exData> list;
     public expend(){
     }
-    public expend(Context c, List<exData> totalData){
-        this.cont = c;
-        this.list = totalData;
-    }
-
     final static String TAG = "Expend Fragment";
     private RecyclerView mRecyclerView;
-    //myDatabase mydb; //TODO: Need to make sure that this is ok; may need to make "new myDatabase"
     String Name = "";
     String Cate = "";
     String Date = "";
@@ -67,27 +55,21 @@ public class expend extends Fragment {
     String Note = "";
     RecyclerView recyclerView;
     RecyclerView_Adapter adapter;
-    RecyclerView.ViewHolder viewHolder;
-    Context cont;
     CursorViewModel mCursor;
-    Cursor cursor;
     List<exData> totalData = new ArrayList<>(); //TODO: will equal whatever is in the db upon startup
 
     //----------------------------------------------------------------------------------------------
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
+        //----------------------------Initial Setups-------------------------------
         mCursor = new ViewModelProvider(requireActivity()).get(CursorViewModel.class);
-
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
         recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        //adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication(), null);
         adapter = new RecyclerView_Adapter(R.layout.row_layout, getActivity().getApplication(), null);
-
+        //----------------------------Cursor Set-------------------------------
         mCursor.getData().observe(getActivity(), new Observer<Cursor>() {
             @Override
             public void onChanged(Cursor cursor) {
@@ -95,8 +77,7 @@ public class expend extends Fragment {
             }
         });
 
-        //----------------------------trying to touch here-------------------------------
-
+        //----------------------------Touch-------------------------------
         adapter.setOnItemClickListener(new RecyclerView_Adapter.onItemClickListener() {
             @Override
             public void onItemClick(String ID) {
@@ -105,14 +86,12 @@ public class expend extends Fragment {
                 Dialog(Integer.valueOf(ID), 0);
             }
         });
-
-        //------------------------------------------------------------
-
+        //---------------------------Set Recycler---------------------------------
         recyclerView.setAdapter(adapter);
         if (!totalData.isEmpty()) {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
-
+        //---------------------------Swipe to Delete---------------------------------
         ItemTouchHelper.SimpleCallback toucher = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -130,10 +109,9 @@ public class expend extends Fragment {
                 }
             }
         };
-
         ItemTouchHelper toucherHelper = new ItemTouchHelper(toucher);
         toucherHelper.attachToRecyclerView(recyclerView);
-
+        //---------------------------FAB Add---------------------------------
         FloatingActionButton fab = myView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +121,8 @@ public class expend extends Fragment {
         });
         return myView;
     }
-    //---------------------------------------------------------------------------------------------
+    //--------------------------------End On Create-------------------------------------------------
+    //------------------------------------Dialog----------------------------------------------------
     void Dialog(int ID, int dial) {
         String dialType;
         LayoutInflater inflater = LayoutInflater.from(requireContext());
@@ -154,11 +133,10 @@ public class expend extends Fragment {
         final EditText set_amot = textenter.findViewById(R.id.et_amot);//set_amot.setText(Amot);
         final EditText set_note = textenter.findViewById(R.id.et_note);//set_note.setText(Note);
         if(dial == 0){dialType="Update";}else{dialType="Add";}
-
-       // cursor = mCursor.Query(String.valueOf(ID));
+        //------------------------------For later maybe
+        // cursor = mCursor.Query(String.valueOf(ID));
         //set_name.setText(cursor.getString(cursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
-
-
+        //------------------------------
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
                 requireContext(), androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog));
         builder.setView(textenter).setTitle(dialType);
