@@ -59,26 +59,17 @@ public class CursorViewModel extends AndroidViewModel {
         return ret;
     }
     @SuppressLint("Range")
-    public TextView Query(String selection){
+    public Cursor Query(String selection){
         String[] projection = {mySQLiteHelper.KEY_ROWID, mySQLiteHelper.KEY_NAME, mySQLiteHelper.KEY_CATE,
                 mySQLiteHelper.KEY_DATE, mySQLiteHelper.KEY_AMOT, mySQLiteHelper.KEY_NOTE};
         String helpSelect = mySQLiteHelper.KEY_ROWID + "=" + selection;
         db.open();
         //myCursor.setValue(db.qbQuery("Expenses", projection, helpSelect, null, null));
         Cursor newCursor = db.qbQuery("Expenses", projection, helpSelect, null, null);
-        TextView name = null;
-        name.setText(newCursor.getString(newCursor.getColumnIndex(mySQLiteHelper.KEY_NAME))); //todo: maybe put this in?
+        newCursor.moveToPosition(0);
         db.close();
-        return name;
+        return newCursor;
     }
-    //    public int Query(){
-//        myCursor.moveToPosition(position);
-//        holder.name.setText(myCursor.getString(myCursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
-//        holder.cate.setText(myCursor.getString(myCursor.getColumnIndex(mySQLiteHelper.KEY_CATE)));
-//        holder.date.setText(myCursor.getString(myCursor.getColumnIndex(mySQLiteHelper.KEY_DATE)));
-//        holder.amot.setText(myCursor.getString(myCursor.getColumnIndex(mySQLiteHelper.KEY_AMOT)));
-//        holder.note.setText(myCursor.getString(myCursor.getColumnIndex(mySQLiteHelper.KEY_NOTE)));
-//    }
 }
 
 //-----------------------------BIN------------------------------------------------

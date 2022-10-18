@@ -124,6 +124,7 @@ public class expend extends Fragment {
     }
     //--------------------------------End On Create-------------------------------------------------
     //------------------------------------Dialog----------------------------------------------------
+    @SuppressLint("Range")
     void Dialog(int ID, int dial) {
         String dialType;
         LayoutInflater inflater = LayoutInflater.from(requireContext());
@@ -134,12 +135,16 @@ public class expend extends Fragment {
         final EditText set_amot = textenter.findViewById(R.id.et_amot);//set_amot.setText(Amot);
         final EditText set_note = textenter.findViewById(R.id.et_note);//set_note.setText(Note);
         if(dial == 0){dialType="Update";
-           // TextView some = mCursor.Query(String.valueOf(ID));
-            Log.d("Some ", String.valueOf(ID));
+           Cursor pCursor = mCursor.Query(String.valueOf(ID));
+            set_name.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_NAME))); //todo: maybe put this in?
+            set_cate.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_CATE))); //todo: maybe put this in?
+            set_date.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_DATE))); //todo: maybe put this in?
+            set_amot.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_AMOT))); //todo: maybe put this in?
+            set_note.setText(pCursor.getString(pCursor.getColumnIndex(mySQLiteHelper.KEY_NOTE))); //todo: maybe put this in?
+           //Log.d("Some ", String.valueOf(some));
         }else{dialType="Add";}
         //------------------------------For later maybe
         // cursor = mCursor.Query(String.valueOf(ID));
-
         //set_name.setText(cursor.getString(cursor.getColumnIndex(mySQLiteHelper.KEY_NAME)));
         //------------------------------
         final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(
