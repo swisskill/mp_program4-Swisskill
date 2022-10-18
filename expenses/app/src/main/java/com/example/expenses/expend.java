@@ -121,8 +121,8 @@ public class expend extends Fragment {
                 if(direction==ItemTouchHelper.RIGHT){
                     int item = viewHolder.getAdapterPosition();
                     totalData.remove(item);
-                    adapter.notifyDataSetChanged();
                     mCursor.Delete("Expenses", String.valueOf(getId()), null);
+                    adapter.notifyDataSetChanged();
                 }
             }
         };
