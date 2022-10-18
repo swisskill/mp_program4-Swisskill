@@ -83,6 +83,7 @@ public class expend extends Fragment {
         Objects.requireNonNull(((MainActivity) requireActivity()).getSupportActionBar()).hide();//get rid of toolbar
         View myView = inflater.inflate(R.layout.fragment_expend, container, false);
         recyclerView = (RecyclerView) myView.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //adapter = new RecyclerView_Adapter(totalData, getActivity().getApplication(), null);
         adapter = new RecyclerView_Adapter(R.layout.row_layout, getActivity().getApplication(), null);
@@ -120,8 +121,8 @@ public class expend extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 if(direction==ItemTouchHelper.RIGHT){
                     int item = viewHolder.getAdapterPosition();
-                    totalData.remove(item);
-                    mCursor.Delete("Expenses", String.valueOf(getId()), null);
+                    //totalData.remove(item);
+                    mCursor.Delete("Expenses", String.valueOf(getId()), null); //they all have the same ID
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -171,7 +172,7 @@ public class expend extends Fragment {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
                 logControl();
                 mCursor.Update("Expenses", dbControl(), String.valueOf(ID), null);
-                totalData.set(ID, new exData (Name, Cate, Date, Amot, Note));
+                //totalData.set(ID, new exData (Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 adapter.notifyDataSetChanged();
 
@@ -201,7 +202,7 @@ public class expend extends Fragment {
                 checkEmpty(et_name,et_cate,et_date,et_amot,et_note);
                 logControl();
                 mCursor.add(Name, Cate, Date, Amot, Note);
-                totalData.add(new exData(Name, Cate, Date, Amot, Note));
+                //totalData.add(new exData(Name, Cate, Date, Amot, Note));
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             }
         }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
