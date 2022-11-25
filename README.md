@@ -1,3 +1,4 @@
+points: 48/50(entry is not visible only white color show up, may be your font color is also white)
 # Program #4
 
 ## Course: 
